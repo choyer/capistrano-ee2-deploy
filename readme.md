@@ -1,53 +1,30 @@
 Deploying ExpressionEngine 2.x Sites using Git+Capistrano+railsless-deploy+NSM Config Bootstrap
 ===============================================================================================
 
-The following workflow might help you manage your [ExpressionEngine](http://expressionengine.com/) 2.x projects. By providing a super simple method for deploying your entire site to a production server it eliminates the need for FTP'ing, SSH'ing and VIM'ing files manually on the server every time a change is required. It will save you copious amounts of time, allowing you to re-invest that time into making your site even more awesome or learning how to unicycle.
+The following workflow might help you manage your [ExpressionEngine](http://expressionengine.com/) 2.x projects. By providing a super simple method for deploying your entire site to a production server it eliminates the need for FTP'ing, SSH'ing and VIM'ing files manually on the server when changes are made. It will save you copious amounts of time, allowing you to re-invest that time into making your site even more awesome or learning how to unicycle.
 
 While several resources exist that detail workflows similar to the one presented below, they all appear to be a few years old and deal exclusively with EE 1.x sites. Within those few short years there have been some advances that make deploying an EE site even easier and more powerful. [Dan Benjamin's](http://hivelogic.com) [Deploying ExpressionEngine From Github with Capistrano](http://hivelogic.com/articles/deploying-expressionengine-github-capistrano/) published in June 2009 has been a great influence. The essence of his fantastically detailed workflow carries on here and even some of the technical technical details are the same. You are encouraged to take the time to read his article cover to cover.
 
-Another highly recommended read is [Jesse Bunch's ExpressionEngine + Version Control blog post](http://getbunch.com/post/12702917040/expressionengine-version-control) making the case for using version control on EE sites and introducing an add-on that disables the native EE template editor within the control panel.
+Another highly recommended read is [Jesse Bunch's ExpressionEngine + Version Control blog post](http://getbunch.com/post/12702917040/expressionengine-version-control) making the case for using [SCM](http://en.wikipedia.org/wiki/Software_Configuration_Management) on EE sites and introduces an add-on that disables the native EE template editor within the control panel to avoid changes outside SCM.
 
 
 ## Why You Want to Do This!
 
-Short answer: There's nothing more exhilarating than typing `cap deploy` and watching the magic happen while sitting back sipping a cup of hot cocoa.
+There's nothing more exhilarating than typing `cap deploy` and watching the magic happen while sitting back sipping a cup of hot cocoa.
 
 
 ## Assumptions
 
 1. You have some familiarity with the [command line](http://wiseheartdesign.com/articles/2010/11/12/the-designers-guide-to-the-osx-command-prompt/)
-2. You are deploying an ExpressionEngine 2.x site
-3. The EE system root is above the webroot as per [ExpressionEngine best practices](http://expressionengine.com/user_guide/installation/best_practices.html)
-4. You are willing to use the EE [NSM Config Bootstrap](http://ee-garage.com/nsm-config-bootstrap)
-
-
-## Installing Git Locally
-
-To use Git as your SCM you will likely need to install it first as it doesn't typically come pre-installed. Here are some options for installing it on your local development computer:
-
-### Via Homebrew on OS X
-
-Consider [Homebrew](http://mxcl.github.com/homebrew/). You'll also need Apple's Xcode installed via [App Store for OS X 10.7 Lion](http://itunes.apple.com/us/app/xcode/id448457090?mt=12) OR [Apple Developer Site](http://developer.apple.com/devcenter/mac/index.action) for OS X 10.6 Snow Leopard and earlier. You can grab a pint of your favourite brew while waiting. Once you've got Homebrew and Xcode on your computer installing git is as simple as
-
-	brew install git
-	
-It doesn't get much easier than that.
-
-### Debian flavoured Linux (Ubuntu)
-
-	apt-get install git-core
-
-### Other platforms via http://git-scm.com/
-
-For those of you using some other flavour of OS or if you simply don't want to use [Homebrew](http://mxcl.github.com/homebrew/) on OS X head on over to the [Git website](http://git-scm.com/). All the instructions are just waiting for you.
-
-
-If you are brand new to Git you can check out [this](http://help.github.com/), [this](http://gitref.org/) & maybe even [this](http://progit.org/).
+2. You are familiar with [Git](http://git-scm.com/), [Github](http://github.com) and it's installed and working on your computer. If not then [here](http://help.github.com/), [here](http://gitref.org/) or [here](http://progit.org/) are excellent references.
+3. You are deploying an ExpressionEngine 2.x site
+4. The EE system root is above the webroot as per [ExpressionEngine best practices](http://expressionengine.com/user_guide/installation/best_practices.html)
+5. You are willing to use the EE [NSM Config Bootstrap](http://ee-garage.com/nsm-config-bootstrap) for managing configuration settings of multiple environments via a single file (very handy).
 
 
 ## Installing Capistrano Locally
 
-If you don't already have [Ruby](http://www.ruby-lang.org) installed on your system (OS X already ships with it installed), take a look at the [Ruby downloads page](http://www.ruby-lang.org/en/downloads/) and consider using [RVM](https://rvm.beginrescueend.com/) (even OS X users should consider RVM).
+If you don't already have [Ruby](http://www.ruby-lang.org) installed on your system (OS X already ships with it installed), take a look at the [Ruby downloads page](http://www.ruby-lang.org/en/downloads/) or consider using [RVM](https://rvm.beginrescueend.com/) (even OS X users should consider RVM).
 
 Once you are all set with Ruby, install capistrano via `rubygems` ...
 
@@ -63,9 +40,9 @@ Enter railsless-deploy a painless why to deploy non-rails apps. Install it via `
 	gem install railsless-deploy
 
 
-## Keeping EE User Generated Content & Cache Out of SCM
+## Keeping EE User Generated Content, Cache & Configs Out of SCM
 
-The following `.gitignore` file will help keep ExpressionEngine 2.x user generated image content and cache clutter out of Git.
+The following `.gitignore` file will help keep ExpressionEngine 2.x user generated image content, cache clutter and configuration files out of Git.
 
 <script src="https://gist.github.com/1386698.js?file=.gitignore"></script>
 
@@ -82,15 +59,7 @@ Because EE is licensed software you are going to have to put it in a private rep
 
 ## Installing Git on Server
 
-Again, if you are running OS X on the server consider installing [homebrew](http://mxcl.github.com/homebrew/) and then installing git is as simple as ...
-
-	brew install git
-
-For Debian flavoured Linux distributions like Ubuntu ...
-
-	apt-get install git-core
-	
-All others see [Git website](http://git-scm.com/) for alternative installation options.
+You will need to install `Git` on the server you wish to deploy your EE site to. Once that's done carry on ...
 
 
 ## Create a deployer User Account on Server
@@ -102,32 +71,40 @@ You can name the user account anything you like. I prefer `deployer`.
 
 ## Create SSH Keys for deployer & Add them to Github
 
-_TODO: generate SSH key instructions to go here_
+SSH keys are required to establish a secure connection with Github when pushing/pulling stuff. **This is an important step that connot be skipped.**
 
-To add the deployment SSH keys to Github see the [Deploy Keys help page](http://help.github.com/deploy-keys/)
+Checkout Githubs help docs for full instructions for [mac](http://help.github.com/mac-set-up-git/), [windows](http://help.github.com/win-set-up-git) or [linux](http://help.github.com/linux-set-up-git/).
+
+And to add the deployment SSH keys to Github see the [Deploy Keys help page](http://help.github.com/deploy-keys/)
 
 
 ## railsless-deploy Flavoured Capistrano for your Project
 
-[Download the contents of this repository](https://github.com/choyer/pixolium-ee2-deploy/zipball/master) to the root directory of you project. **NO need to run `capify .`**
+[Download the contents of this repository](https://github.com/choyer/pixolium-ee2-deploy/zipball/master) to the your project root directory. **NO need to run `capify .`**
 
-Change the settings as in `config/deploy.rb` to match your environment.
+Change the documented settings in `config/deploy.rb` to match your environment.
 
 
 ## The Capistrano _Shared_ Directory and What to Use it for
 
-Capistrano has a special shared directory that can be used to contain any files that remain mostly static from one deploy to another. This makes it a good candidate to hold the following files for your EE site ...
+Capistrano has a special shared directory that can be used to contain any files that remain mostly static from one deploy to another. This makes it a good candidate to hold the following types of files for your EE site ...
 
 _TODO: detail use of shared directory_
 
 
 ## What is the NSM Config Bootstrap and How to Use it Best With Source Control?
 
-[NSM Config Bootstrap](http://ee-garage.com/nsm-config-bootstrap) was created by Leevi Graham to support multiple environments using a single EE configuration file.
+The [NSM Config Bootstrap](http://ee-garage.com/nsm-config-bootstrap) was created by Leevi Graham to support multiple environments using a single EE configuration file.
 
-While you could maintain the EE config files manually for each environment, there are enough commonalities amongst environments (e.g. Site Name, EE license, etc) that having to keep the config files in sync for more than two environments will quickly become a chore.
+While you could maintain separate EE config files for each environment, there are enough commonalities between environments (e.g. Site Name, EE license, etc) that having to keep the config files in sync for more than two environments becomes a pain. Typically the only different configuration parameters between environments are the database connection settings.
 
-shared -> copy to -> project root
+### Including NSM Config Bootstrap in the config.php & database.php files (aka the correct `require` path)
+
+Assuming NSM Config Bootstrap is in the project root directory (as noted in the next section) the correct code to included in `system/expressionengine/config/config.php & database.php` is
+
+	require(realpath(dirname(__FILE__) . '/../../../config_bootstrap.php'));
+	
+** As with most config files you should probably keep this OUT of source control. The `.gitignore` file above will do that for you.
 
 
 ## Setup the Directory Structure on the Server
@@ -138,12 +115,29 @@ To setup the skeleton directory structure simply run ...
 	
 This is **ONLY required the very first time you deploy to a new server**.
 
+The recommended project directory structure and location of key files is as followed (note that not allow of this gets created automatically by running `cap deploy:setup`) ...
+
+	+--example.com [project root]/
+	   +--config [from this repo]/
+	   |
+	   +--system [ee system dir]/
+	   |
+	   +--htdocs [web root]/
+	   |
+	   +--templates [ee site templates dir]/
+	   |  +--default_site [where you actually put your templates]/
+	   |
+	   +--static-templates [more on this in the future]/
+	   |
+	   +--Capfile [from this repo]
+	   +--config_bootstrap.php [your customized NSM Config Bootstrap]
+
 
 ## Deploy (Sit Back and Watch the Magic Over and Over)
 
-After committing and pushing modifications via `Git`, deploying the changes to production is as easy as ...
+After committing and pushing changes to your repository via `Git`, deploying the changes from your workstation to production is as easy as running ...
 
- cap deploy
+	cap deploy
 
 
 ## Rolling Back a Bad Deployment
@@ -162,4 +156,4 @@ This will restore code back to the previous version. The only caveat is that thi
 This is just a start. Some ideas for future inclusion ...
 
 - Deploying/Sync'ing the EE database
-- Full multi-environment support (e.g. development, staging) mirroring [NSM Config Bootstrap](http://ee-garage.com/nsm-config-bootstrap). Currently 
+- Full multi-environment support (e.g. development, staging) mirroring [NSM Config Bootstrap](http://ee-garage.com/nsm-config-bootstrap). Currently only support for deployment from local to production.
